@@ -23,9 +23,10 @@ public class IndexController {
         return ResponseEntity.ok(
                 Map.of(
                         "Note: ", "Welcome to this Fake Recipe API. Data provided from this service are not mine.",
+                        "Developer:", "Imanue´l",
                         "remote-host", req.getRemoteHost(),
                         "client-app", req.getHeader("User-Agent"),
-                        "ip-address", Objects.requireNonNullElse(req.getHeader("x-forwarded-for"), req.getRemoteAddr())
+                        "ip-address", Objects.requireNonNullElse(req.getHeader("x-forwarded-for"), req.getRemoteAddr().concat(" R"))
                 )
         );
     }
