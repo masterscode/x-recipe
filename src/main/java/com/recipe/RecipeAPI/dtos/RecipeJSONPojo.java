@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,11 +20,11 @@ public class RecipeJSONPojo {
 
     String name;
     String description;
-    String imageUrl;
+    String imageURL;
 
-    List<Ingredient> ingredients;
-    List<String>steps;
-    List<Integer>timers;
+    Set<Ingredient> ingredients;
+    Set<String>steps;
+    Set<Integer>timers;
 
 
 }

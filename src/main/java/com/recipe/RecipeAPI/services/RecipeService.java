@@ -13,9 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -27,14 +30,20 @@ import java.util.logging.Level;
 public class RecipeService {
     RecipeRepository repository;
 
-    public APIResponse<Page<RecipeOverviewDto>> getAllRecipe(Pageable pagination) {
+    public APIResponse<List<RecipeOverviewDto>> getAllRecipe(Pageable pagination) {
         return CompletableFuture.supplyAsync(() -> repository.getRecipeOverview(pagination))
                 .thenApplyAsync(dtoPage ->
-                        APIResponse.<Page<RecipeOverviewDto>>builder()
+                        APIResponse.<List<RecipeOverviewDto>>builder()
                                 .success(true)
                                 .time(LocalDateTime.now())
-                                .message("Recipe successfully retrieved")
-                                .data(dtoPage)
+                                .meta(Map.<String, Object>of(
+                                        "totalElement", dtoPage.getTotalElements(),
+                                        "page", dtoPage.getNumber(),
+                                        "pageSize", dtoPage.getSize(),
+                                        "totalPages", dtoPage.getTotalPages()
+                                ))
+                                .message("Recipe(s) successfully retrieved")
+                                .data(dtoPage.getContent())
                                 .build())
                 .handleAsync((data, ex) -> {
                     if (Objects.nonNull(ex)) log.log(Level.SEVERE, ex::getMessage);
@@ -43,27 +52,25 @@ public class RecipeService {
 
     }
 
-
     public APIResponse<Recipe> getRecipe(Long recipeId) {
-        return CompletableFuture.supplyAsync(() -> repository.findById(recipeId).orElseThrow(EntityNotFoundException::new))
+        return CompletableFuture.supplyAsync(() -> repository.findById(recipeId).orElseThrow(()->new EntityNotFoundException("Entity ( Recipe ) not found")))
                 .thenApplyAsync(recipe ->
                         APIResponse.<Recipe>builder()
                                 .success(true)
                                 .time(LocalDateTime.now())
+                                .status(HttpStatus.OK)
                                 .message("Recipe successfully retrieved")
                                 .data(recipe)
                                 .build())
                 .exceptionallyAsync(ex -> {
-                    if (ex.getCause() instanceof EntityNotFoundException) {
-                        return APIResponse.<Recipe>builder()
-                                .message("No element found for id " + recipeId)
+                    log.log(Level.SEVERE, ex.getMessage(), ex);
+
+                    return APIResponse.<Recipe>builder()
+                                .message(ex.getCause().getMessage())
                                 .success(false)
                                 .status(HttpStatus.BAD_REQUEST)
                                 .success(false).build();
-                    }
-                    log.log(Level.SEVERE, ex::getMessage);
 
-                    return new APIResponse<>();
                 })
                 .thenApplyAsync(data -> data).join();
     }
@@ -81,13 +88,4 @@ public class RecipeService {
                 .build();
     }
 
-
-    private RecipeOverviewDto toOverviewDtoAdapter(Recipe recipe) {
-        return new RecipeOverviewDto(
-                recipe.getId(),
-                recipe.getName(),
-                recipe.getDescription(),
-                recipe.getImageUrl()
-        );
-    }
 }

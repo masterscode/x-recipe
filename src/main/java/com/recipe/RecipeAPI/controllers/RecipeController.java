@@ -8,11 +8,12 @@ import com.recipe.RecipeAPI.services.RecipeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/recipe")
@@ -24,7 +25,7 @@ public class RecipeController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public APIResponse<Page<RecipeOverviewDto>> getAllRecipes(
+    public APIResponse<List<RecipeOverviewDto>> getAllRecipes(
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "page-size", required = false, defaultValue = "10") int pageSize
     ) {
