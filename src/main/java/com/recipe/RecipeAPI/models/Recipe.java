@@ -33,7 +33,6 @@ public class Recipe {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Ingredient> ingredients = new HashSet<>();
 
-    @JsonIgnore
     @ElementCollection
     Set<String> steps = new HashSet<>() ;
     @ElementCollection

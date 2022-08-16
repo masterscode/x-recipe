@@ -18,7 +18,7 @@ public interface RecipeRepository  extends JpaRepository<Recipe, Long> {
     @Query("select  new com.recipe.RecipeAPI.dtos.RecipeOverviewDto(r.id, r.name,r.description, r.imageUrl) from Recipe r")
     Page<RecipeOverviewDto> getRecipeOverview(Pageable pageable);
 
-    @Query("select r from Recipe r  join fetch r.ingredients  join r.steps  join fetch r.timers where r.id =:id")
+    @Query("select r from Recipe r  join fetch r.ingredients  join fetch r.steps  join fetch r.timers where r.id =:id")
     Optional<Recipe> findById(Long id);
 
 }
