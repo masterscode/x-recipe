@@ -72,7 +72,20 @@ public class ChequeConfirmationService {
 	}
 
 	public BaseResponse<PreConfirmationResponse> doPreConfirmCheque(PreConfirmationRequest request){
-		ChequeConfirmation confirmation = new ChequeConfirmation();
+		final ChequeConfirmation confirmation = new ChequeConfirmation();
+		confirmation.setChequeNo(request.getChequeNo());
+		confirmation.setAmount(request.getAmount());
+		confirmation.setBeneficiaryName(request.getBeneficiaryName());
+		confirmation.setBeneficiaryPhoneNo(request.getBeneficiaryPhoneNo());
+
+		confirmation.setAccountNo(request.getSenderAccountNo());
+		confirmation.setCustomerEmail(request.getSenderEmail());
+		confirmation.setCustomerPhone(request.getSenderPhoneNo());
+		confirmation.setMakerId(request.getMakerId());
+		confirmation.setChequeStatusName("cleared");
+		confirmation.setMakerDate(LocalDateTime.now().toString());
+		confirmation.setAcctName("No name set");
+		confirmation.setNoofDocuments(String.valueOf(1));
 
 		final ChequeConfirmation saved = chequeConfirmationRepository.save(confirmation);
 

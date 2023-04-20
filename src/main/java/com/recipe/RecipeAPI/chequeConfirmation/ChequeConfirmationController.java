@@ -46,7 +46,7 @@ public class ChequeConfirmationController {
 	}
 
 	@PostMapping("/chequeconfirmationrequests/{accountNumber}/request/{chequeNumber}/customer")
-	public ResponseEntity<BaseResponse<ChequeConfirmationResponseDTO>> preChequeConfirmation(@PathVariable String accountNumber, @PathVariable String chequeNumber, @RequestBody UpdateConfirmationRequestDTO request) {
+	public ResponseEntity<BaseResponse<ChequeConfirmationResponseDTO>> updateChequeConfirmation(@PathVariable String accountNumber, @PathVariable String chequeNumber, @RequestBody UpdateConfirmationRequestDTO request) {
 		return ResponseEntity.ok(
 			chequeConfirmationService.updateChequeConfirmation(request, accountNumber, chequeNumber)
 		);

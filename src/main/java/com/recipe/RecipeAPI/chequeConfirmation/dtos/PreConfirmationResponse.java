@@ -44,7 +44,7 @@ public class PreConfirmationResponse {
         beneficiaryPhoneNo = confirmation.getBeneficiaryPhoneNo();
         accountNo = confirmation.getAccountNo();
         customerEmail = confirmation.getCustomerEmail();
-        customerPhoneNo = "N/A";
+        customerPhoneNo = confirmation.getCustomerPhone();
         makerId = confirmation.getMakerId();
     }
 }

@@ -41,5 +41,6 @@ public class ChequeConfirmation {
 	private String clearedAt;
 
 	private String customerEmail;
+	private String customerPhone;
 
 }
